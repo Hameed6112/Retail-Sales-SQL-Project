@@ -1,37 +1,28 @@
-Retail Sales Analysis using SQL Server
+# 🛒 Retail Sales Analysis Using SQL Server
 
-Project Overview
+## 📌 Project Overview
 
-Project Name: Retail Sales Analysis
+This project analyzes retail sales data using SQL Server. The goal is to perform data cleaning, exploratory data analysis (EDA), and answer business questions to generate meaningful insights from customer purchasing behavior.
 
-Tool Used: SQL Server Management Studio (SSMS)
-
-Database: SQL_Retail_Project
-
-This project focuses on analyzing retail sales data using SQL. The objective is to perform data cleaning, exploratory data analysis (EDA), and answer business-related questions using SQL queries. Through this project, various SQL concepts such as filtering, aggregation, grouping, ranking functions, and conditional statements were applied to derive meaningful business insights.
+**Level:** Beginner  
+**Database:** SQL_Retail_Project  
+**Tool Used:** SQL Server
 
 ---
 
-Objectives
+## 🎯 Objectives
 
 - Create and manage a retail sales database.
-- Perform data cleaning and validation.
-- Conduct exploratory data analysis (EDA).
-- Analyze customer behavior and sales performance.
-- Solve real-world business problems using SQL.
+- Clean and validate sales data.
+- Perform exploratory data analysis (EDA).
+- Answer business-related questions using SQL.
+- Generate insights about customers, sales, and product categories.
 
 ---
 
-Database Setup
+## 🗄️ Database Structure
 
-Create Database
-
-CREATE DATABASE SQL_Retail_Project;
-USE SQL_Retail_Project;
-
-Dataset Information
-
-The dataset contains retail transaction details including:
+The dataset contains the following information:
 
 - Transaction ID
 - Sale Date
@@ -39,207 +30,72 @@ The dataset contains retail transaction details including:
 - Customer ID
 - Gender
 - Age
-- Product Category
-- Quantity Sold
-- Cost of Goods Sold (COGS)
-- Total Sales
-
-
-
------->  Data Cleaning
-
-
-
-Total Records
-
-SELECT COUNT(*) AS Total_Rows
-FROM retail_sales_new;
-
-Check Missing Values
-
-SELECT *
-FROM retail_sales_new
-WHERE transactions_Id IS NULL
-OR sale_date IS NULL
-OR sale_time IS NULL
-OR gender IS NULL
-OR category IS NULL
-OR quantiy IS NULL
-OR cogs IS NULL
-OR total_sale IS NULL;
-
-Remove Null Records
-
-DELETE FROM retail_sales_new
-WHERE transactions_Id IS NULL
-OR sale_date IS NULL
-OR sale_time IS NULL
-OR gender IS NULL
-OR age IS NULL
-OR category IS NULL
-OR quantiy IS NULL
-OR cogs IS NULL
-OR total_sale IS NULL;
-
-
-
------ > Business Questions Solved
-
-
-1. Retrieve Sales Made on 2022-11-05
-
-SELECT *
-FROM retail_sales_new
-WHERE sale_date = '2022-11-05';
+- Category
+- Quantity
+- Price Per Unit
+- COGS
+- Total Sale
 
 ---
 
-2. Retrieve Clothing Category Transactions
+## 🧹 Data Cleaning
 
-SELECT *
-FROM retail_sales_new
-WHERE category = 'Clothing';
+The following data quality checks were performed:
 
----
-
-3. Calculate Total Sales for Each Category
-
-SELECT category,
-       SUM(total_sale) AS Total_sales
-FROM retail_sales_new
-GROUP BY category;
+- Identified NULL values.
+- Removed incomplete records.
+- Validated sales transaction data.
+- Ensured data consistency.
 
 ---
 
-4. Find Average Age of Beauty Category Customers
+## 📊 Business Questions Solved
 
-SELECT AVG(age) AS Average_Age
-FROM retail_sales_new
-WHERE category = 'Beauty';
-
----
-
-5. Find Transactions with Total Sales Greater Than 1000
-
-SELECT *
-FROM retail_sales_new
-WHERE total_sale > 1000;
-
----
-
-6. Find Total Transactions by Gender and Category
-
-SELECT gender,
-       category,
-       COUNT(transactions_id) AS total_transactions
-FROM retail_sales_new
-GROUP BY gender, category
-ORDER BY gender, category;
+1. Retrieve sales made on a specific date.
+2. Analyze clothing category transactions.
+3. Calculate total sales for each category.
+4. Find average customer age for Beauty category.
+5. Identify transactions with sales greater than 1000.
+6. Count transactions by gender and category.
+7. Calculate monthly average sales.
+8. Identify top 5 customers based on sales.
+9. Count unique customers by category.
+10. Analyze sales shifts (Morning, Afternoon, Evening).
 
 ---
 
-7. Calculate Average Monthly Sales and Rank Months
+## 🔍 Key Findings
 
-SELECT
-       YEAR(sale_date) AS sales_year,
-       MONTH(sale_date) AS sales_month,
-       AVG(total_sale) AS avg_sale,
-       RANK() OVER
-       (
-            PARTITION BY YEAR(sale_date)
-            ORDER BY AVG(total_sale) DESC
-       ) AS rnk
-FROM retail_sales_new
-GROUP BY YEAR(sale_date),
-         MONTH(sale_date);
+### Customer Insights
+- Identified unique customer purchasing patterns.
+- Determined top spending customers.
+- Analyzed customer distribution across categories.
 
----
+### Sales Insights
+- Category-wise sales performance was evaluated.
+- High-value transactions were identified.
+- Monthly sales trends were analyzed.
 
-8. Top 5 Customers by Total Sales
-
-SELECT TOP 5
-       customer_id,
-       SUM(total_sale) AS total_sales
-FROM retail_sales_new
-GROUP BY customer_id
-ORDER BY total_sales DESC;
+### Operational Insights
+- Order distribution was analyzed by shift.
+- Customer activity patterns were observed throughout the day.
 
 ---
 
-9. Number of Unique Customers by Category
+## 🛠️ Skills Demonstrated
 
-SELECT category,
-       COUNT(DISTINCT customer_id) AS unique_customers
-FROM retail_sales_new
-GROUP BY category
-ORDER BY COUNT(DISTINCT customer_id) DESC;
-
----
-
-10. Orders by Shift Analysis
-
-SELECT
-    CASE
-        WHEN DATEPART(HOUR, sale_time) < 12 THEN 'Morning'
-        WHEN DATEPART(HOUR, sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
-        ELSE 'Evening'
-    END AS Shift,
-    COUNT(transactions_id) AS Number_of_Orders
-FROM retail_sales_new
-GROUP BY
-    CASE
-        WHEN DATEPART(HOUR, sale_time) < 12 THEN 'Morning'
-        WHEN DATEPART(HOUR, sale_time) BETWEEN 12 AND 17 THEN 'Afternoon'
-        ELSE 'Evening'
-    END
-ORDER BY Number_of_Orders DESC;
-
----
-
----> Key Findings
-
-Customer Insights
-
-- Identified customer purchasing patterns across product categories.
-- Calculated average customer age for Beauty category purchases.
-- Determined the top 5 customers based on total sales value.
-
-Sales Performance
-
-- Measured total sales generated by each product category.
-- Identified high-value transactions exceeding 1000 in sales.
-- Analyzed monthly sales performance using ranking functions.
-
-Category Analysis
-
-- Determined unique customer counts for each category.
-- Evaluated transaction volume across gender and category combinations.
-
-Time-Based Analysis
-
-- Categorized sales into Morning, Afternoon, and Evening shifts.
-- Measured the number of orders generated during each shift.
-
----
-
-SQL Concepts Used
-
-- SELECT Statement
-- WHERE Clause
+- SQL Queries
+- Data Cleaning
+- Aggregate Functions
 - GROUP BY
 - ORDER BY
-- Aggregate Functions (SUM, COUNT, AVG)
-- DISTINCT
-- CASE Statement
-- DATEPART Function
-- Window Functions (RANK)
-- Data Cleaning using DELETE
-- Filtering and Business Analysis
+- Window Functions
+- CASE Statements
+- Business Analysis
+- Data Exploration
 
 ---
 
-Project Outcome
+## 📈 Project Outcome
 
-This project helped strengthen practical SQL skills by working on a real-world retail sales dataset. Through data cleaning, exploratory analysis, and business-driven queries, meaningful insights were generated regarding customer behavior, category performance, sales trends, and operational patterns.
-
-The project demonstrates foundational SQL skills required for Data Analyst roles and serves as a portfolio project showcasing data analysis capabilities.
+This project demonstrates practical SQL skills used by Data Analysts to clean, analyze, and extract business insights from retail sales data.
